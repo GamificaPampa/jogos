@@ -1,0 +1,796 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GamificaPampa - Missão Crase</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap');
+
+:root {
+  --azul: #39bdf5;
+  --azul-escuro: #0878b9;
+  --amarelo: #ffdb38;
+  --verde: #48d77b;
+  --vermelho: #ff6262;
+  --roxo: #a77bff;
+  --escuro: #17334d;
+  --branco: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Nunito', 'Trebuchet MS', sans-serif;
+  color: var(--escuro);
+  background: linear-gradient(180deg, #48c6f7 0%, #91e1ff 65%, #c9f2ff 100%);
+  padding: 15px;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  font-weight: 900;
+  border: 3px solid var(--escuro);
+  border-radius: 16px;
+  box-shadow: 0 5px 0 var(--escuro);
+  transition: transform .1s, box-shadow .1s;
+}
+
+button:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 var(--escuro);
+}
+
+header {
+  max-width: 1000px;
+  margin: auto;
+  text-align: center;
+}
+
+.logo {
+  display: inline-block;
+  background: var(--amarelo);
+  border: 4px solid var(--escuro);
+  border-radius: 20px;
+  padding: 8px 24px;
+  box-shadow: 0 6px 0 var(--escuro);
+  transform: rotate(-1deg);
+}
+
+.logo h1 {
+  margin: 0;
+  font-size: clamp(25px, 5vw, 43px);
+}
+
+.logo p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.subtitle {
+  font-size: clamp(15px, 2.5vw, 20px);
+  font-weight: 900;
+  margin: 20px 0;
+}
+
+.container {
+  max-width: 900px;
+  margin: 20px auto;
+}
+
+.panel {
+  background: white;
+  border: 4px solid var(--escuro);
+  border-radius: 25px;
+  padding: clamp(15px, 4vw, 30px);
+  box-shadow: 0 8px 0 var(--escuro);
+  text-align: center;
+}
+
+.hidden {
+  display: none !important;
+}
+
+h2 {
+  font-size: clamp(23px, 4vw, 32px);
+  margin: 5px 0 15px;
+}
+
+p {
+  line-height: 1.5;
+}
+
+.big-text {
+  font-size: clamp(18px, 3vw, 23px);
+  font-weight: 900;
+}
+
+.start-btn, .next-btn, .restart-btn {
+  background: var(--amarelo);
+  color: var(--escuro);
+  font-size: 21px;
+  padding: 15px 35px;
+  margin: 15px 5px;
+}
+
+.progress-area {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-weight: 900;
+  margin-bottom: 12px;
+}
+
+.progress-bg {
+  width: 100%;
+  height: 20px;
+  border: 3px solid var(--escuro);
+  border-radius: 20px;
+  overflow: hidden;
+  background: #e5e5e5;
+  margin-bottom: 20px;
+}
+
+.progress {
+  height: 100%;
+  background: var(--verde);
+  width: 0%;
+  transition: width .3s;
+}
+
+.question {
+  background: #e8f8ff;
+  border: 3px solid var(--azul-escuro);
+  border-radius: 18px;
+  padding: 20px;
+  margin: 15px 0;
+}
+
+.question .sentence {
+  font-size: clamp(23px, 4.5vw, 34px);
+  font-weight: 900;
+  color: #174e78;
+  margin: 12px 0;
+}
+
+.answers {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.answer-btn {
+  background: var(--azul);
+  color: var(--escuro);
+  padding: 17px 10px;
+  font-size: clamp(17px, 3vw, 22px);
+  min-height: 70px;
+}
+
+.answer-btn:hover:not(:disabled) {
+  background: #76dcff;
+}
+
+.answer-btn:disabled {
+  opacity: .85;
+  cursor: default;
+}
+
+.feedback {
+  border: 3px solid var(--escuro);
+  border-radius: 16px;
+  padding: 15px;
+  font-size: 19px;
+  font-weight: 900;
+  margin: 15px 0;
+  text-align: left;
+}
+
+.correct {
+  background: #c7ffd8;
+}
+
+.wrong {
+  background: #ffe0df;
+}
+
+.feedback strong {
+  display: block;
+  font-size: 22px;
+  margin-bottom: 5px;
+}
+
+.next-btn {
+  background: var(--verde);
+}
+
+.stars {
+  font-size: clamp(40px, 9vw, 65px);
+  margin: 20px 0;
+  letter-spacing: 8px;
+}
+
+.phase-card {
+  background: #f4fbff;
+  border: 3px solid var(--escuro);
+  border-radius: 16px;
+  padding: 15px;
+  margin: 12px 0;
+}
+
+.phase-card h3 {
+  margin: 0;
+  font-size: 21px;
+}
+
+.phase-card p {
+  margin: 5px 0;
+}
+
+.tip {
+  background: #fff3b8;
+  border: 3px dashed #a67a00;
+  padding: 15px;
+  border-radius: 15px;
+  font-weight: 800;
+  margin-top: 20px;
+}
+
+footer {
+  text-align: center;
+  font-weight: 900;
+  padding: 20px;
+  font-size: 14px;
+}
+
+@media(max-width: 550px) {
+  .answers {
+    grid-template-columns: 1fr;
+  }
+
+  body {
+    padding: 8px;
+  }
+
+  .answer-btn {
+    min-height: 58px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">
+    <h1>🌞 GAMIFICAPAMPA</h1>
+    <p>MISSÃO CRASE — A aventura do acento grave!</p>
+  </div>
+  <div class="subtitle">
+    🐎 Da cidade de Alegrete até os campos do Pampa!
+  </div>
+</header>
+
+<main class="container">
+
+<!-- TELA INICIAL -->
+<section id="inicio" class="panel">
+  <div style="font-size:65px">📚 ✏️ 🐎</div>
+  <h2>DESAFIO DA CRASE!</h2>
+
+  <p class="big-text">
+    Você consegue descobrir quando usar o acento grave (À)?
+  </p>
+
+  <div class="phase-card">
+    <h3>🟢 FASE 1 — DETETIVE DA CRASE</h3>
+    <p>Descubra onde aparece a crase.</p>
+  </div>
+
+  <div class="phase-card">
+    <h3>🟡 FASE 2 — DOMINANDO AS REGRAS</h3>
+    <p>Aprenda quando usar e quando NÃO usar.</p>
+  </div>
+
+  <div class="phase-card">
+    <h3>🔴 FASE 3 — MESTRE DO ACENTO GRAVE</h3>
+    <p>Resolva situações do cotidiano de Alegrete.</p>
+  </div>
+
+  <div class="tip">
+    💡 DICA: Na dúvida, faça o teste da troca pelo masculino!
+    <br>
+    Exemplo: Vou à escola → Vou ao colégio.
+  </div>
+
+  <button class="start-btn" onclick="iniciar()">🚀 COMEÇAR A MISSÃO</button>
+</section>
+
+<!-- TELA DO JOGO -->
+<section id="jogo" class="panel hidden">
+
+  <div class="progress-area">
+    <span id="faseNome">FASE 1</span>
+    <span id="contador">Questão 1/5</span>
+    <span id="pontos">⭐ 0 pontos</span>
+  </div>
+
+  <div class="progress-bg">
+    <div id="barra" class="progress"></div>
+  </div>
+
+  <div class="question">
+    <h2 id="tituloQuestao">Vamos começar!</h2>
+    <div id="enunciado" class="big-text"></div>
+    <div id="frase" class="sentence"></div>
+  </div>
+
+  <div id="respostas" class="answers"></div>
+
+  <div id="feedback" class="feedback hidden"></div>
+
+  <button id="proximo" class="next-btn hidden" onclick="proxima()">
+    PRÓXIMA QUESTÃO ➜
+  </button>
+
+</section>
+
+<!-- RESULTADO DA FASE -->
+<section id="resultadoFase" class="panel hidden">
+  <div style="font-size:65px">🎉</div>
+  <h2 id="tituloResultado">FASE CONCLUÍDA!</h2>
+  <div id="estrelaFase" class="stars">⭐⭐⭐</div>
+  <p id="mensagemFase" class="big-text"></p>
+  <button class="next-btn" onclick="continuarFase()">
+    CONTINUAR ➜
+  </button>
+</section>
+
+<!-- RESULTADO FINAL -->
+<section id="final" class="panel hidden">
+  <div style="font-size:75px">🏆</div>
+  <h2>MISSÃO CUMPRIDA!</h2>
+  <p class="big-text">Você conquistou o domínio da crase!</p>
+
+  <div id="estrelasFinal" class="stars">⭐⭐⭐</div>
+
+  <h2 id="pontuacaoFinal"></h2>
+  <p id="classificacao" class="big-text"></p>
+
+  <div class="tip">
+    📌 LEMBRE-SE:
+    <br><br>
+    Crase é a união da preposição A com o artigo A.
+    <br>
+    A + A = À
+    <br><br>
+    O acento grave indica essa união!
+  </div>
+
+  <button class="restart-btn" onclick="reiniciar()">
+    🔄 JOGAR NOVAMENTE
+  </button>
+</section>
+
+</main>
+
+<footer>
+  🌾 GAMIFICAPAMPA — APRENDER TAMBÉM É UMA AVENTURA!
+</footer>
+
+<script>
+
+// BANCO DE QUESTÕES
+
+const fases = [
+
+{
+ nome: "🟢 FASE 1 — DETETIVE DA CRASE",
+ questoes: [
+
+  {
+   enunciado: "Qual frase está escrita corretamente?",
+   frase: "Vou ___ escola estudar.",
+   opcoes: ["à", "a", "á", "há"],
+   correta: 0,
+   explicacao: "O verbo ir pede a preposição A. Escola aceita o artigo A. A + A = À."
+  },
+
+  {
+   enunciado: "Complete corretamente:",
+   frase: "Cheguei ___ praça de Alegrete.",
+   opcoes: ["a", "à", "há", "á"],
+   correta: 1,
+   explicacao: "Quem chega, chega A algum lugar. Praça admite o artigo A. Por isso: à praça."
+  },
+
+  {
+   enunciado: "Qual alternativa NÃO apresenta crase?",
+   frase: "Observe as opções:",
+   opcoes: [
+    "Vou à feira.",
+    "Cheguei à escola.",
+    "Entreguei o livro a Pedro.",
+    "Fui à praça."
+   ],
+   correta: 2,
+   explicacao: "Antes de nome masculino, como Pedro, normalmente não ocorre crase."
+  },
+
+  {
+   enunciado: "Complete a frase:",
+   frase: "Os estudantes foram ___ biblioteca.",
+   opcoes: ["à", "há", "a", "á"],
+   correta: 0,
+   explicacao: "Foram A algum lugar + A biblioteca. A união forma À biblioteca."
+  },
+
+  {
+   enunciado: "Encontre a frase correta:",
+   frase: "O ônibus chegou ___ noite.",
+   opcoes: ["a noite", "à noite", "há noite", "á noite"],
+   correta: 1,
+   explicacao: "A expressão feminina à noite é uma locução adverbial e recebe crase."
+  }
+ ]
+},
+
+{
+ nome: "🟡 FASE 2 — DOMINANDO AS REGRAS",
+ questoes: [
+
+  {
+   enunciado: "Antes de palavra masculina, usamos crase?",
+   frase: "O peão foi ___ campo.",
+   opcoes: ["à", "a", "á", "há"],
+   correta: 1,
+   explicacao: "Campo é masculino. Em geral, não usamos crase antes de palavras masculinas."
+  },
+
+  {
+   enunciado: "Complete corretamente:",
+   frase: "Maria começou ___ estudar cedo.",
+   opcoes: ["à", "a", "há", "á"],
+   correta: 1,
+   explicacao: "Antes de verbo não ocorre crase. Estudar é um verbo."
+  },
+
+  {
+   enunciado: "Qual frase está correta?",
+   frase: "Observe as alternativas:",
+   opcoes: [
+    "Vou à cavalo.",
+    "Vou a cavalo.",
+    "Vou há cavalo.",
+    "Vou á cavalo."
+   ],
+   correta: 1,
+   explicacao: "A cavalo é uma expressão masculina. Não recebe crase."
+  },
+
+  {
+   enunciado: "Complete:",
+   frase: "O evento começará ___ 19 horas.",
+   opcoes: ["as", "às", "há", "a"],
+   correta: 1,
+   explicacao: "Na indicação de horas determinadas, usamos crase: às 19 horas."
+  },
+
+  {
+   enunciado: "Qual frase está correta?",
+   frase: "Observe as opções:",
+   opcoes: [
+    "Entreguei o trabalho à professora.",
+    "Entreguei o trabalho à ele.",
+    "Comecei à escrever.",
+    "Fui à pé."
+   ],
+   correta: 0,
+   explicacao: "Antes de professora há preposição A + artigo A. Não ocorre crase antes de pronome pessoal, verbo ou expressão masculina como a pé."
+  }
+ ]
+},
+
+{
+ nome: "🔴 FASE 3 — MESTRE DO ACENTO GRAVE",
+ questoes: [
+
+  {
+   enunciado: "Situação em Alegrete: escolha a forma correta.",
+   frase: "Os alunos foram ___ Praça Getúlio Vargas.",
+   opcoes: ["à", "a", "há", "á"],
+   correta: 0,
+   explicacao: "O verbo ir pede preposição A. O nome da praça admite artigo A. Portanto: à Praça Getúlio Vargas."
+  },
+
+  {
+   enunciado: "No Pampa, complete corretamente:",
+   frase: "O cavaleiro saiu ___ procura dos animais.",
+   opcoes: ["a", "à", "há", "á"],
+   correta: 1,
+   explicacao: "À procura de é uma locução prepositiva feminina. Por isso recebe crase."
+  },
+
+  {
+   enunciado: "Qual alternativa está correta?",
+   frase: "A turma chegou ___ uma conclusão.",
+   opcoes: ["à", "a", "há", "às"],
+   correta: 1,
+   explicacao: "Antes de artigo indefinido uma, não ocorre crase. A forma correta é a uma conclusão."
+  },
+
+  {
+   enunciado: "Complete a frase:",
+   frase: "O professor explicou o conteúdo ___ turma.",
+   opcoes: ["a", "à", "há", "á"],
+   correta: 1,
+   explicacao: "Quem explica, explica algo A alguém. Turma admite o artigo A. Portanto: à turma."
+  },
+
+  {
+   enunciado: "DESAFIO FINAL! Qual frase está totalmente correta?",
+   frase: "Escolha a alternativa:",
+   opcoes: [
+    "Cheguei à Alegrete ontem.",
+    "Fui à cavalo para o campo.",
+    "Voltei à escola às 8 horas.",
+    "Comecei à estudar às 9 horas."
+   ],
+   correta: 2,
+   explicacao: "Voltei A + A escola = à escola. Horas determinadas recebem crase: às 8 horas. Alegrete não recebe artigo nesse uso; a cavalo é expressão masculina; antes de verbo não há crase."
+  }
+ ]
+}
+
+];
+
+// VARIÁVEIS DO JOGO
+
+let faseAtual = 0;
+let questaoAtual = 0;
+let pontos = 0;
+let totalAcertos = 0;
+let bloqueado = false;
+let acertosPorFase = [0,0,0];
+
+// SOM DE ACERTO
+
+function tocarSom() {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+
+    const contexto = new AudioContext();
+    const oscilador = contexto.createOscillator();
+    const volume = contexto.createGain();
+
+    oscilador.connect(volume);
+    volume.connect(contexto.destination);
+
+    oscilador.frequency.setValueAtTime(650, contexto.currentTime);
+    oscilador.frequency.setValueAtTime(900, contexto.currentTime + 0.12);
+
+    volume.gain.setValueAtTime(0.15, contexto.currentTime);
+    volume.gain.exponentialRampToValueAtTime(
+      0.001, contexto.currentTime + 0.35
+    );
+
+    oscilador.start();
+    oscilador.stop(contexto.currentTime + 0.35);
+  } catch(e) {}
+}
+
+// INICIAR
+
+function iniciar() {
+  faseAtual = 0;
+  questaoAtual = 0;
+  pontos = 0;
+  totalAcertos = 0;
+  acertosPorFase = [0,0,0];
+
+  mostrar("jogo");
+  carregarQuestao();
+}
+
+function mostrar(id) {
+  ["inicio","jogo","resultadoFase","final"].forEach(t => {
+    document.getElementById(t).classList.add("hidden");
+  });
+
+  document.getElementById(id).classList.remove("hidden");
+}
+
+// CARREGAR QUESTÃO
+
+function carregarQuestao() {
+  bloqueado = false;
+
+  const fase = fases[faseAtual];
+  const q = fase.questoes[questaoAtual];
+
+  document.getElementById("faseNome").textContent = fase.nome;
+  document.getElementById("contador").textContent =
+    `Questão ${questaoAtual+1}/5`;
+
+  document.getElementById("pontos").textContent =
+    `⭐ ${pontos} pontos`;
+
+  document.getElementById("tituloQuestao").textContent =
+    "DESAFIO " + (questaoAtual+1);
+
+  document.getElementById("enunciado").textContent = q.enunciado;
+  document.getElementById("frase").textContent = q.frase;
+
+  document.getElementById("barra").style.width =
+    ((questaoAtual / 5) * 100) + "%";
+
+  const area = document.getElementById("respostas");
+  area.innerHTML = "";
+
+  q.opcoes.forEach((opcao, index) => {
+    const botao = document.createElement("button");
+
+    botao.className = "answer-btn";
+    botao.textContent = opcao;
+    botao.onclick = () => responder(index);
+
+    area.appendChild(botao);
+  });
+
+  document.getElementById("feedback").classList.add("hidden");
+  document.getElementById("proximo").classList.add("hidden");
+}
+
+// RESPONDER
+
+function responder(indice) {
+  if (bloqueado) return;
+
+  bloqueado = true;
+
+  const q = fases[faseAtual].questoes[questaoAtual];
+  const feedback = document.getElementById("feedback");
+  const botoes = document.querySelectorAll(".answer-btn");
+
+  botoes.forEach((botao, i) => {
+    botao.disabled = true;
+
+    if (i === q.correta) {
+      botao.style.background = "#8cf0a8";
+    } else if (i === indice) {
+      botao.style.background = "#ffaaaa";
+    }
+  });
+
+  if (indice === q.correta) {
+    pontos += 10;
+    totalAcertos++;
+    acertosPorFase[faseAtual]++;
+
+    tocarSom();
+
+    feedback.className = "feedback correct";
+    feedback.innerHTML =
+      "<strong>🎉 MUITO BEM! +10 PONTOS!</strong>" +
+      "Você acertou! Continue assim!";
+  } else {
+    feedback.className = "feedback wrong";
+    feedback.innerHTML =
+      "<strong>💡 VAMOS APRENDER!</strong>" +
+      q.explicacao +
+      "<br><br><b>Resposta correta: " +
+      q.opcoes[q.correta] + "</b>";
+  }
+
+  feedback.classList.remove("hidden");
+
+  document.getElementById("pontos").textContent =
+    `⭐ ${pontos} pontos`;
+
+  document.getElementById("barra").style.width =
+    (((questaoAtual+1) / 5) * 100) + "%";
+
+  document.getElementById("proximo").classList.remove("hidden");
+
+  if (questaoAtual === 4) {
+    document.getElementById("proximo").textContent =
+      faseAtual === 2 ? "VER RESULTADO FINAL 🏆" : "CONCLUIR FASE ➜";
+  } else {
+    document.getElementById("proximo").textContent =
+      "PRÓXIMA QUESTÃO ➜";
+  }
+}
+
+// AVANÇAR
+
+function proxima() {
+  if (questaoAtual < 4) {
+    questaoAtual++;
+    carregarQuestao();
+  } else {
+    mostrarResultadoFase();
+  }
+}
+
+// RESULTADO DE CADA FASE
+
+function mostrarResultadoFase() {
+  mostrar("resultadoFase");
+
+  const acertos = acertosPorFase[faseAtual];
+
+  let estrelas = "⭐";
+
+  if (acertos >= 3) estrelas = "⭐⭐";
+  if (acertos === 5) estrelas = "⭐⭐⭐";
+
+  document.getElementById("tituloResultado").textContent =
+    fases[faseAtual].nome;
+
+  document.getElementById("estrelaFase").textContent = estrelas;
+
+  document.getElementById("mensagemFase").textContent =
+    `${acertos} de 5 respostas corretas! Você ganhou ${acertos*10} pontos nesta fase.`;
+}
+
+// CONTINUAR
+
+function continuarFase() {
+  if (faseAtual < 2) {
+    faseAtual++;
+    questaoAtual = 0;
+    mostrar("jogo");
+    carregarQuestao();
+  } else {
+    mostrarFinal();
+  }
+}
+
+// RESULTADO FINAL
+
+function mostrarFinal() {
+  mostrar("final");
+
+  const estrelas = Math.min(3, Math.floor(totalAcertos / 5));
+
+  document.getElementById("estrelasFinal").textContent =
+    "⭐".repeat(estrelas) + "☆".repeat(3-estrelas);
+
+  document.getElementById("pontuacaoFinal").textContent =
+    `${pontos} / 150 PONTOS`;
+
+  let mensagem = "";
+
+  if (totalAcertos >= 13) {
+    mensagem = "🏆 LENDA DA CRASE! Você domina o acento grave!";
+  } else if (totalAcertos >= 9) {
+    mensagem = "🌟 MUITO BEM! Você está no caminho certo!";
+  } else if (totalAcertos >= 5) {
+    mensagem = "👏 BOM TRABALHO! Continue praticando!";
+  } else {
+    mensagem = "💪 NÃO DESISTA! Revise as regras e tente novamente!";
+  }
+
+  document.getElementById("classificacao").textContent = mensagem;
+}
+
+// REINICIAR
+
+function reiniciar() {
+  iniciar();
+}
+
+</script>
+
+</body>
+</html>
