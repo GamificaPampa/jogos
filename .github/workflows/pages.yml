@@ -1,0 +1,57 @@
+# Publicando a galeria no GitHub Pages a cada jogo novo. O deploy por Actions escapa do limite
+# de 10 builds por hora do Pages comum, e o jogos.json é montado aqui, a partir das pastas,
+# para que dois professores publicando juntos nunca disputem o mesmo arquivo.
+name: Publicar a galeria
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Deixando só um deploy por vez. Os pushes que chegam no meio esperam, e o último leva todos os jogos
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+
+      # Juntando as fichas dos jogos num jogos.json, do mais novo ao mais antigo.
+      # Pula as pastas sem index.html ou com ficha quebrada, para um envio ruim não derrubar a galeria
+      - name: Montar o jogos.json
+        run: |
+          node -e '
+            const fs = require("fs")
+            const jogos = []
+            for (const pasta of fs.readdirSync(".", { withFileTypes: true })) {
+              if (!pasta.isDirectory() || pasta.name.startsWith(".")) continue
+              if (!fs.existsSync(`${pasta.name}/index.html`)) continue
+              try {
+                const ficha = JSON.parse(fs.readFileSync(`${pasta.name}/jogo.json`, "utf8"))
+                jogos.push({ pasta: pasta.name, nome: ficha.nome, escola: ficha.escola, publicado: ficha.publicado })
+              } catch {
+                console.log(`Pulando ${pasta.name}: ficha ausente ou quebrada`)
+              }
+            }
+            jogos.sort((a, b) => String(b.publicado).localeCompare(String(a.publicado)))
+            fs.writeFileSync("jogos.json", JSON.stringify(jogos))
+            console.log(`${jogos.length} jogos na galeria`)
+          '
+
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: .
+      - id: deploy
+        uses: actions/deploy-pages@v5

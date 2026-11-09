@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jogos dos professores · GamificaPampa</title>
+  <meta name="description" content="Os jogos que os professores criaram com a IA e publicaram pelo GamificaPampa.">
+  <meta property="og:title" content="Jogos dos professores · GamificaPampa">
+  <meta property="og:description" content="Os jogos que os professores criaram com a IA e publicaram pelo GamificaPampa.">
+  <meta property="og:image" content="https://gamificapampa.github.io/identidade-visual/logos/gamificapampa-github-avatar.png">
+  <link rel="icon" type="image/svg+xml" href="/identidade-visual/logos/gamificapampa-icone.svg">
+  <link rel="stylesheet" href="/identidade-visual/css/fontes.css">
+  <link rel="stylesheet" href="/identidade-visual/css/cores.css">
+  <link rel="stylesheet" href="/identidade-visual/css/componentes.css">
+  <link rel="stylesheet" href="/identidade-visual/css/cenario.css">
+  <link rel="stylesheet" href="/identidade-visual/css/animacoes.css">
+  <style>
+    [hidden] { display: none !important; }
+    .topo { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 16px clamp(16px, 4vw, 40px); }
+    main { display: grid; gap: 28px; width: min(1080px, 100% - 32px); margin: 16px auto 64px; }
+    h1 { text-align: center; }
+    .lema { text-align: center; margin: -8px 0 0; }
+    .rodape { padding: 24px 16px 120px; text-align: center; font-size: 15px; font-weight: 600; }
+    .rodape a { margin-left: 6px; }
+
+    /* Busca e contagem dos jogos */
+    .busca { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; }
+    .busca input { flex: 1 1 260px; font: 500 17px var(--font); color: var(--ink); border: 4px solid var(--ink); border-radius: 18px; padding: 12px 16px; background: var(--white); }
+    .busca input:focus-visible { outline: 4px solid var(--pink); outline-offset: 2px; }
+
+    /* Cartões dos jogos: nome, escola, data e os botões de jogar e de denunciar */
+    .jogos { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 26px; margin: 0; padding: 0; list-style: none; }
+    .jogo { display: flex; flex-direction: column; gap: 6px; }
+    .jogo h2 { font-size: 24px; overflow-wrap: anywhere; }
+    .jogo p { margin: 0; color: var(--soft); font-weight: 500; overflow-wrap: anywhere; }
+    .jogo .acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: auto; padding-top: 12px; }
+    .denunciar { font-size: 14px; color: var(--soft); }
+    .vazio { text-align: center; font-weight: 600; }
+  </style>
+<style>/* tipografia automatica (viuvas, orfas e forcas) */
+p, li, blockquote {
+  orphans: 2;
+  widows: 2;
+  hyphens: manual;
+  text-wrap: pretty;
+}
+</style>
+</head>
+<body>
+  <div class="cenario cenario--fixo" aria-hidden="true">
+    <span class="nuvem" style="top: 5%; --w: 190px; --t: 70s; --d: -10s"></span>
+    <span class="nuvem" style="top: 30%; --w: 140px; --t: 60s; --d: -26s"></span>
+    <span class="simbolo" style="left: 5%; top: 24%">&lt;/&gt;</span>
+    <span class="simbolo" style="right: 6%; top: 14%; --d: -2s">{ }</span>
+    <span class="morros"></span>
+  </div>
+
+  <header class="topo">
+    <a class="btn" href="https://gamificapampa.github.io/">Voltar ao GamificaPampa</a>
+    <img src="/identidade-visual/logos/gamificapampa-horizontal.svg" alt="GamificaPampa" width="200" height="44">
+  </header>
+
+  <main>
+    <h1 class="loud anima-letras"><span class="yellow">Jogos</span> dos <span class="pink">professores</span></h1>
+    <p class="lema"><span class="pill" style="--c: var(--mint)">Criados com a IA e publicados pelo GamificaPampa</span></p>
+
+    <div class="busca">
+      <input type="search" id="busca" placeholder="Procure pelo nome do jogo ou da escola" aria-label="Procurar jogo">
+      <a class="btn btn--compartilhar" href="/publicador/">Publicar o meu jogo</a>
+    </div>
+
+    <ul class="jogos" id="jogos"></ul>
+    <p class="card vazio" id="vazio" hidden>Nenhum jogo encontrado.</p>
+  </main>
+
+  <footer class="rodape">GamificaPampa · UNIPAMPA, Campus Alegrete ·<a href="/publicador/#denunciar">Denunciar um jogo</a></footer>
+
+  <script>
+    const lista = document.getElementById('jogos')
+    const busca = document.getElementById('busca')
+    let jogos = []
+
+    // Escapando o texto que veio do formulário dos professores antes de pôr na página
+    const seguro = valor => String(valor).replace(/[&<>"']/g, letra => `&#${letra.charCodeAt(0)};`)
+    const semAcento = valor => valor.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+
+    // Desenhando os cartões dos jogos que batem com a busca
+    function desenhar() {
+      const termo = semAcento(busca.value.trim())
+      const achados = jogos.filter(jogo => semAcento(jogo.nome + ' ' + jogo.escola).includes(termo))
+      lista.innerHTML = achados.map(jogo => `
+        <li class="card jogo">
+          <h2>${seguro(jogo.nome)}</h2>
+          <p>${seguro(jogo.escola)}</p>
+          <p>${new Date(jogo.publicado).toLocaleDateString('pt-BR')}</p>
+          <div class="acoes">
+            <a class="btn btn--small btn--jogar" href="${seguro(jogo.pasta)}/">Jogar</a>
+            <a class="denunciar" href="/publicador/?denunciar=${encodeURIComponent(jogo.pasta)}#denunciar">Denunciar</a>
+          </div>
+        </li>`).join('')
+      document.getElementById('vazio').hidden = achados.length > 0
+    }
+
+    busca.oninput = desenhar
+    fetch('jogos.json', { cache: 'no-store' })
+      .then(resposta => resposta.ok ? resposta.json() : [])
+      .catch(() => [])
+      .then(dados => { jogos = dados; desenhar() })
+  </script>
+</body>
+</html>
