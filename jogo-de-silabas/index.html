@@ -1,0 +1,772 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Missão Sílabas - GamificaPampa</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap');
+
+:root {
+  --azul: #38bdf8;
+  --azul-escuro: #075985;
+  --amarelo: #ffdb38;
+  --verde: #42d66b;
+  --vermelho: #ff6868;
+  --roxo: #a78bfa;
+  --escuro: #17324d;
+  --branco: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Baloo 2', 'Trebuchet MS', sans-serif;
+  color: var(--escuro);
+  background:
+    radial-gradient(circle at 10% 15%, white 0 35px, transparent 36px),
+    radial-gradient(circle at 90% 20%, #fff 0 28px, transparent 29px),
+    linear-gradient(180deg, #38bdf8 0%, #a5e5ff 65%, #b7e99c 100%);
+  padding: 15px;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: 3px solid var(--escuro);
+  border-radius: 17px;
+  font-weight: 800;
+  color: var(--escuro);
+  box-shadow: 4px 5px 0 var(--escuro);
+  transition: transform .12s, box-shadow .12s;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 7px 0 var(--escuro);
+}
+
+button:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 2px 0 var(--escuro);
+}
+
+button:focus-visible {
+  outline: 4px solid white;
+  outline-offset: 4px;
+}
+
+.container {
+  width: 100%;
+  max-width: 1050px;
+  margin: auto;
+}
+
+header {
+  text-align: center;
+  margin: 5px auto 18px;
+}
+
+.logo {
+  display: inline-block;
+  background: var(--amarelo);
+  border: 4px solid var(--escuro);
+  border-radius: 25px;
+  padding: 8px 25px;
+  box-shadow: 6px 7px 0 var(--escuro);
+  transform: rotate(-1deg);
+}
+
+h1 {
+  font-size: clamp(30px, 5vw, 55px);
+  margin: 0;
+  line-height: 1.1;
+  color: #fff;
+  text-shadow: 3px 4px 0 var(--escuro);
+}
+
+.subtitle {
+  font-size: clamp(15px, 2.5vw, 22px);
+  margin: 12px 0 0;
+  font-weight: 800;
+  color: var(--escuro);
+}
+
+.panel {
+  background: rgba(255,255,255,.95);
+  border: 4px solid var(--escuro);
+  border-radius: 25px;
+  padding: clamp(15px, 3vw, 30px);
+  box-shadow: 7px 8px 0 var(--escuro);
+  margin-bottom: 22px;
+}
+
+.center {
+  text-align: center;
+}
+
+h2 {
+  font-size: clamp(25px, 4vw, 38px);
+  margin: 5px 0 12px;
+}
+
+p {
+  font-size: clamp(17px, 2.4vw, 23px);
+  line-height: 1.4;
+}
+
+.big {
+  font-size: clamp(25px, 5vw, 42px);
+  font-weight: 800;
+}
+
+.start-btn {
+  background: var(--amarelo);
+  padding: 13px 35px;
+  font-size: clamp(21px, 3vw, 30px);
+  margin: 15px;
+}
+
+.secondary-btn {
+  background: #d9f3ff;
+  padding: 10px 22px;
+  font-size: 19px;
+  margin: 8px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.stat {
+  background: var(--amarelo);
+  border: 3px solid var(--escuro);
+  border-radius: 14px;
+  padding: 7px 17px;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.progress {
+  height: 19px;
+  background: #d7e7ee;
+  border: 3px solid var(--escuro);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--verde);
+  transition: width .4s;
+}
+
+.phase-tag {
+  display: inline-block;
+  background: var(--roxo);
+  border: 3px solid var(--escuro);
+  border-radius: 14px;
+  padding: 5px 18px;
+  font-weight: 800;
+  font-size: 20px;
+  color: white;
+  text-shadow: 1px 2px var(--escuro);
+}
+
+.question {
+  background: #e6f7ff;
+  border: 3px dashed #1684b5;
+  border-radius: 20px;
+  padding: 18px;
+  margin: 18px 0;
+  text-align: center;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.option {
+  background: #fff;
+  padding: 17px 10px;
+  font-size: clamp(19px, 3vw, 27px);
+  min-height: 75px;
+  overflow-wrap: anywhere;
+}
+
+.option.correct {
+  background: var(--verde);
+}
+
+.option.wrong {
+  background: #ffaaaa;
+}
+
+.option:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.feedback {
+  border: 3px solid var(--escuro);
+  border-radius: 18px;
+  padding: 15px;
+  font-size: clamp(18px, 2.5vw, 23px);
+  font-weight: 700;
+  margin-top: 15px;
+  display: none;
+}
+
+.feedback.ok {
+  background: #b9f6c9;
+}
+
+.feedback.no {
+  background: #ffe2ae;
+}
+
+.next-btn {
+  background: var(--amarelo);
+  padding: 12px 30px;
+  font-size: 23px;
+  display: none;
+  margin: 20px auto 0;
+}
+
+.stars {
+  font-size: clamp(40px, 9vw, 80px);
+  letter-spacing: 8px;
+  margin: 15px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.rule {
+  background: #fff4bd;
+  border-left: 7px solid #f2b600;
+  padding: 12px 16px;
+  border-radius: 10px;
+  text-align: left;
+  margin: 15px 0;
+  font-size: 18px;
+}
+
+.footer {
+  text-align: center;
+  font-weight: 800;
+  padding: 10px;
+  font-size: 17px;
+}
+
+@media(max-width: 520px) {
+  .options {
+    grid-template-columns: 1fr;
+  }
+  .panel {
+    padding: 15px;
+  }
+  .topbar {
+    justify-content: center;
+  }
+}
+
+@media print {
+  body { background: white; }
+  button { display: none; }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+  <div class="logo">
+    <h1>🌞 MISSÃO SÍLABAS</h1>
+  </div>
+  <div class="subtitle">
+    🚩 GAMIFICAPAMPA • Uma aventura pela língua portuguesa!
+  </div>
+</header>
+
+<!-- TELA INICIAL -->
+<section id="inicio" class="panel center">
+  <div class="big">🐎🌾</div>
+  <h2>O desafio começou!</h2>
+  <p>
+    Prepare-se para explorar as palavras do nosso cotidiano,
+    de Alegrete e do Pampa gaúcho!
+  </p>
+
+  <div class="rule">
+    <strong>🎯 Sua missão:</strong><br>
+    Superar três fases, descobrir como as palavras são
+    organizadas em sílabas e conquistar estrelas.
+  </div>
+
+  <p>
+    <strong>FASE 1:</strong> Contagem e separação<br>
+    <strong>FASE 2:</strong> Sílaba tônica<br>
+    <strong>FASE 3:</strong> Desafios especiais
+  </p>
+
+  <p>💡 Leia com calma. Pense antes de responder!</p>
+  <button class="start-btn" onclick="iniciar()">
+    🚀 COMEÇAR JOGO
+  </button>
+</section>
+
+<!-- TELA DO JOGO -->
+<section id="jogo" class="panel hidden">
+
+  <div class="topbar">
+    <div class="stat" id="fase">FASE 1</div>
+    <div class="stat" id="questao">Questão 1/5</div>
+    <div class="stat">⭐ <span id="pontos">0</span></div>
+  </div>
+
+  <div class="progress">
+    <div class="progress-fill" id="barra"></div>
+  </div>
+
+  <div class="center">
+    <span class="phase-tag" id="nomeFase">🔎 Detetives das sílabas</span>
+  </div>
+
+  <div class="question">
+    <p id="enunciado">Observe a palavra:</p>
+    <div class="big" id="palavra">ALEGRETE</div>
+    <p id="instrucao">Quantas sílabas ela possui?</p>
+  </div>
+
+  <div class="options" id="opcoes"></div>
+
+  <div id="feedback" class="feedback"></div>
+
+  <button id="proximo" class="next-btn" onclick="avancar()">
+    PRÓXIMO DESAFIO ➜
+  </button>
+
+</section>
+
+<!-- TELA FINAL -->
+<section id="final" class="panel center hidden">
+  <div class="big">🏆 MISSÃO CONCLUÍDA!</div>
+  <h2>Você explorou o universo das sílabas!</h2>
+
+  <div class="stars" id="estrelas">⭐⭐⭐</div>
+
+  <div class="big" id="resultado">15 pontos</div>
+  <p id="mensagemFinal"></p>
+
+  <div class="rule">
+    <strong>📚 O que aprendemos?</strong><br>
+    ✔ Divisão e contagem de sílabas.<br>
+    ✔ Classificação quanto à tonicidade.<br>
+    ✔ Dígrafos, ditongos e hiatos.<br>
+    ✔ Regras de separação silábica.
+  </div>
+
+  <button class="start-btn" onclick="reiniciar()">
+    🔄 JOGAR NOVAMENTE
+  </button>
+</section>
+
+<div class="footer">
+  🌾 GAMIFICAPAMPA • Aprender também é uma aventura!
+</div>
+
+</div>
+
+<script>
+
+// BANCO DE QUESTÕES
+const fases = [
+
+{
+  nome: "🔎 DETETIVES DAS SÍLABAS",
+  questoes: [
+
+    {
+      palavra: "ALEGRETE",
+      enunciado: "Observe o nome da nossa cidade!",
+      instrucao: "Quantas sílabas tem ALEGRETE?",
+      opcoes: ["2 sílabas", "3 sílabas", "4 sílabas", "5 sílabas"],
+      correta: 2,
+      explicacao: "A separação é A-LE-GRE-TE. São quatro sílabas."
+    },
+
+    {
+      palavra: "PAMPA",
+      enunciado: "O bioma que faz parte da nossa identidade!",
+      instrucao: "Qual é a separação correta?",
+      opcoes: ["P-A-M-P-A", "PAM-PA", "PAMPA", "PA-M-PA"],
+      correta: 1,
+      explicacao: "PAMPA divide-se em PAM-PA. Cada sílaba tem um núcleo vocálico."
+    },
+
+    {
+      palavra: "CAMPO",
+      enunciado: "Uma paisagem comum no Rio Grande do Sul.",
+      instrucao: "Quantas sílabas possui CAMPO?",
+      opcoes: ["1", "2", "3", "4"],
+      correta: 1,
+      explicacao: "CAM-PO tem duas sílabas. A palavra é dissílaba."
+    },
+
+    {
+      palavra: "CAVALO",
+      enunciado: "Animal muito presente na cultura gaúcha.",
+      instrucao: "Qual é a divisão silábica correta?",
+      opcoes: ["CA-VA-LO", "CAV-A-LO", "CA-VALO", "C-A-VA-LO"],
+      correta: 0,
+      explicacao: "CA-VA-LO tem três sílabas. É uma palavra trissílaba."
+    },
+
+    {
+      palavra: "CHIMARRÃO",
+      enunciado: "Uma tradição do nosso cotidiano!",
+      instrucao: "Quantas sílabas tem CHIMARRÃO?",
+      opcoes: ["2", "3", "4", "5"],
+      correta: 1,
+      explicacao: "CHI-MAR-RÃO possui três sílabas. O dígrafo CH permanece junto."
+    }
+
+  ]
+},
+
+{
+  nome: "🎵 DETETIVES DA TONICIDADE",
+  questoes: [
+
+    {
+      palavra: "CAFÉ",
+      enunciado: "Uma bebida muito conhecida!",
+      instrucao: "Em qual sílaba está a maior força da voz?",
+      opcoes: ["CA", "FÉ", "As duas", "Nenhuma"],
+      correta: 1,
+      explicacao: "CA-FÉ: a sílaba tônica é FÉ. A palavra é oxítona, pois a força está na última sílaba."
+    },
+
+    {
+      palavra: "PAMPA",
+      enunciado: "Vamos analisar a palavra!",
+      instrucao: "Como ela é classificada quanto à tonicidade?",
+      opcoes: ["Oxítona", "Paroxítona", "Proparoxítona", "Monossílabo"],
+      correta: 1,
+      explicacao: "PAM-pa: a sílaba tônica é PAM, a penúltima. Portanto, é paroxítona."
+    },
+
+    {
+      palavra: "MÚSICA",
+      enunciado: "Uma palavra presente no nosso cotidiano.",
+      instrucao: "Qual é a classificação de MÚSICA?",
+      opcoes: ["Oxítona", "Paroxítona", "Proparoxítona", "Monossílabo"],
+      correta: 2,
+      explicacao: "MÚ-si-ca: a sílaba tônica é a antepenúltima. Toda proparoxítona é acentuada."
+    },
+
+    {
+      palavra: "ANIMAL",
+      enunciado: "Pode ser encontrado nas estâncias do Pampa.",
+      instrucao: "Qual é a classificação da palavra?",
+      opcoes: ["Oxítona", "Paroxítona", "Proparoxítona", "Monossílabo"],
+      correta: 0,
+      explicacao: "A-ni-MAL: a sílaba tônica é a última. Portanto, é oxítona."
+    },
+
+    {
+      palavra: "ÁRVORE",
+      enunciado: "Elemento importante da paisagem!",
+      instrucao: "Onde está a sílaba tônica?",
+      opcoes: ["Na última", "Na penúltima", "Na antepenúltima", "Não possui"],
+      correta: 2,
+      explicacao: "ÁR-vo-re: a sílaba tônica é a antepenúltima. Por isso, é proparoxítona."
+    }
+
+  ]
+},
+
+{
+  nome: "🔥 MESTRES DA DIVISÃO",
+  questoes: [
+
+    {
+      palavra: "CHUVA",
+      enunciado: "A chuva é importante para o Pampa!",
+      instrucao: "Qual é a separação correta?",
+      opcoes: ["C-HU-VA", "CHU-VA", "CH-UV-A", "CHUVA"],
+      correta: 1,
+      explicacao: "CHU-VA. O dígrafo CH representa um único som e não se separa."
+    },
+
+    {
+      palavra: "CARRO",
+      enunciado: "Transporte comum nas estradas da região.",
+      instrucao: "Como separamos a palavra CARRO?",
+      opcoes: ["CA-RRO", "CAR-RO", "C-AR-RO", "CARRO"],
+      correta: 1,
+      explicacao: "CAR-RO. O dígrafo RR representa um som, mas suas letras ficam em sílabas diferentes."
+    },
+
+    {
+      palavra: "SAÚDE",
+      enunciado: "Cuidar da saúde é fundamental!",
+      instrucao: "Qual é a separação correta?",
+      opcoes: ["SAÚ-DE", "SA-Ú-DE", "SA-ÚD-E", "S-AÚ-DE"],
+      correta: 1,
+      explicacao: "SA-Ú-DE. Há um hiato: as vogais A e Ú ficam em sílabas diferentes."
+    },
+
+    {
+      palavra: "QUEIJO",
+      enunciado: "Um alimento presente na mesa gaúcha.",
+      instrucao: "Como devemos separar QUEIJO?",
+      opcoes: ["QU-EI-JO", "QUEI-JO", "QUE-I-JO", "Q-UEI-JO"],
+      correta: 1,
+      explicacao: "QUEI-JO. O grupo QU permanece junto de E. O U não é pronunciado nesse caso."
+    },
+
+    {
+      palavra: "GAÚCHO",
+      enunciado: "Uma palavra que representa nossa cultura!",
+      instrucao: "Qual alternativa apresenta a divisão correta?",
+      opcoes: ["GAÚ-CHO", "GA-Ú-CHO", "GA-ÚCH-O", "G-AÚ-CHO"],
+      correta: 1,
+      explicacao: "GA-Ú-CHO. A e Ú formam um hiato, pois pertencem a sílabas diferentes."
+    }
+
+  ]
+}
+
+];
+
+let faseAtual = 0;
+let perguntaAtual = 0;
+let pontos = 0;
+let respondido = false;
+let acertos = 0;
+
+// SOM DO ACERTO
+function somAcerto() {
+  try {
+    const contexto = new (window.AudioContext || window.webkitAudioContext)();
+    const oscilador = contexto.createOscillator();
+    const volume = contexto.createGain();
+
+    oscilador.connect(volume);
+    volume.connect(contexto.destination);
+
+    oscilador.type = "sine";
+    oscilador.frequency.setValueAtTime(550, contexto.currentTime);
+    oscilador.frequency.setValueAtTime(800, contexto.currentTime + 0.12);
+
+    volume.gain.setValueAtTime(0.2, contexto.currentTime);
+    volume.gain.exponentialRampToValueAtTime(
+      0.001, contexto.currentTime + 0.35
+    );
+
+    oscilador.start();
+    oscilador.stop(contexto.currentTime + 0.35);
+  } catch(e) {}
+}
+
+// INICIAR
+function iniciar() {
+  document.getElementById("inicio").classList.add("hidden");
+  document.getElementById("final").classList.add("hidden");
+  document.getElementById("jogo").classList.remove("hidden");
+
+  faseAtual = 0;
+  perguntaAtual = 0;
+  pontos = 0;
+  acertos = 0;
+
+  mostrarPergunta();
+}
+
+// MOSTRAR QUESTÃO
+function mostrarPergunta() {
+
+  respondido = false;
+
+  const fase = fases[faseAtual];
+  const q = fase.questoes[perguntaAtual];
+
+  document.getElementById("fase").textContent =
+    "FASE " + (faseAtual + 1);
+
+  document.getElementById("questao").textContent =
+    "Questão " + (perguntaAtual + 1) + "/5";
+
+  document.getElementById("pontos").textContent = pontos;
+
+  document.getElementById("nomeFase").textContent = fase.nome;
+
+  document.getElementById("enunciado").textContent = q.enunciado;
+  document.getElementById("palavra").textContent = q.palavra;
+  document.getElementById("instrucao").textContent = q.instrucao;
+
+  const total = faseAtual * 5 + perguntaAtual;
+  document.getElementById("barra").style.width =
+    (total / 15 * 100) + "%";
+
+  document.getElementById("feedback").style.display = "none";
+  document.getElementById("feedback").className = "feedback";
+
+  document.getElementById("proximo").style.display = "none";
+
+  const opcoes = document.getElementById("opcoes");
+  opcoes.innerHTML = "";
+
+  q.opcoes.forEach((opcao, indice) => {
+    const botao = document.createElement("button");
+
+    botao.className = "option";
+    botao.textContent = opcao;
+
+    botao.onclick = () => responder(indice, botao);
+
+    opcoes.appendChild(botao);
+  });
+}
+
+// RESPONDER
+function responder(escolha, botaoEscolhido) {
+
+  if (respondido) return;
+
+  respondido = true;
+
+  const q = fases[faseAtual].questoes[perguntaAtual];
+  const feedback = document.getElementById("feedback");
+  const botoes = document.querySelectorAll(".option");
+
+  botoes.forEach((b, i) => {
+    b.disabled = true;
+
+    if (i === q.correta) {
+      b.classList.add("correct");
+    }
+  });
+
+  if (escolha === q.correta) {
+
+    pontos += 10;
+    acertos++;
+
+    somAcerto();
+
+    feedback.className = "feedback ok";
+    feedback.innerHTML =
+      "🎉 MUITO BEM! Resposta correta!<br>+10 pontos";
+
+  } else {
+
+    botaoEscolhido.classList.add("wrong");
+
+    feedback.className = "feedback no";
+    feedback.innerHTML =
+      "💡 VAMOS APRENDER!<br>" + q.explicacao;
+
+  }
+
+  document.getElementById("pontos").textContent = pontos;
+  feedback.style.display = "block";
+
+  document.getElementById("proximo").style.display = "block";
+
+  if (
+    faseAtual === 2 &&
+    perguntaAtual === 4
+  ) {
+    document.getElementById("proximo").textContent =
+      "🏆 VER RESULTADO";
+  } else if (perguntaAtual === 4) {
+    document.getElementById("proximo").textContent =
+      "AVANÇAR DE FASE ➜";
+  } else {
+    document.getElementById("proximo").textContent =
+      "PRÓXIMA QUESTÃO ➜";
+  }
+}
+
+// AVANÇAR
+function avancar() {
+
+  if (perguntaAtual < 4) {
+
+    perguntaAtual++;
+
+  } else if (faseAtual < 2) {
+
+    faseAtual++;
+    perguntaAtual = 0;
+
+  } else {
+
+    finalizar();
+    return;
+
+  }
+
+  mostrarPergunta();
+}
+
+// RESULTADO
+function finalizar() {
+
+  document.getElementById("jogo").classList.add("hidden");
+  document.getElementById("final").classList.remove("hidden");
+
+  document.getElementById("barra").style.width = "100%";
+
+  document.getElementById("resultado").textContent =
+    pontos + " pontos de 150";
+
+  let quantidade = 1;
+  let mensagem = "";
+
+  if (acertos >= 13) {
+    quantidade = 3;
+    mensagem = "🌟 EXCELENTE! Você é um mestre das sílabas!";
+  } else if (acertos >= 9) {
+    quantidade = 2;
+    mensagem = "👏 MUITO BOM! Você está dominando o conteúdo!";
+  } else {
+    quantidade = 1;
+    mensagem = "💪 BOM TRABALHO! Continue praticando e evoluindo!";
+  }
+
+  document.getElementById("estrelas").textContent =
+    "⭐".repeat(quantidade) + "☆".repeat(3 - quantidade);
+
+  document.getElementById("mensagemFinal").textContent =
+    mensagem + " Você acertou " + acertos + " de 15 desafios.";
+}
+
+// REINICIAR
+function reiniciar() {
+  iniciar();
+}
+
+</script>
+</body>
+</html>
