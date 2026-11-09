@@ -1,0 +1,682 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Missão das Sílabas - GamificaPampa</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap');
+
+:root {
+  --ceu: #55c9f5;
+  --azul: #168bd0;
+  --amarelo: #ffdf45;
+  --verde: #64d66c;
+  --rosa: #ff718a;
+  --escuro: #17344b;
+  --branco: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Baloo 2', 'Trebuchet MS', sans-serif;
+  background: var(--ceu);
+  color: var(--escuro);
+  text-align: center;
+  padding: 15px;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: 4px solid var(--escuro);
+  border-radius: 18px;
+  font-weight: 800;
+  color: var(--escuro);
+  box-shadow: 5px 6px 0 var(--escuro);
+  transition: transform .12s;
+}
+
+button:active {
+  transform: translate(4px, 4px);
+  box-shadow: 1px 2px 0 var(--escuro);
+}
+
+.container {
+  max-width: 950px;
+  margin: auto;
+}
+
+header {
+  background: var(--amarelo);
+  border: 5px solid var(--escuro);
+  border-radius: 25px;
+  padding: 12px;
+  box-shadow: 7px 8px 0 var(--escuro);
+  margin-bottom: 22px;
+}
+
+h1 {
+  font-size: clamp(28px, 5vw, 48px);
+  margin: 0;
+  line-height: 1.1;
+  text-shadow: 2px 2px white;
+}
+
+header p {
+  margin: 5px;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.paisagem {
+  font-size: 40px;
+  margin: 8px;
+}
+
+.painel {
+  background: white;
+  border: 5px solid var(--escuro);
+  border-radius: 25px;
+  padding: 22px;
+  box-shadow: 7px 8px 0 var(--escuro);
+  margin-bottom: 22px;
+}
+
+h2 {
+  font-size: clamp(25px, 4vw, 36px);
+  margin: 5px 0 12px;
+}
+
+p {
+  font-size: 21px;
+  font-weight: 600;
+}
+
+.instrucao {
+  background: #fff3a6;
+  border: 3px dashed var(--escuro);
+  border-radius: 18px;
+  padding: 12px;
+  margin: 15px 0;
+  font-size: 21px;
+}
+
+.btn-principal {
+  background: var(--verde);
+  font-size: 26px;
+  padding: 14px 35px;
+  margin: 12px;
+}
+
+.btn-opcao {
+  background: #ffdc65;
+  font-size: clamp(21px, 3vw, 29px);
+  padding: 15px 12px;
+  width: 100%;
+  min-height: 85px;
+  margin: 8px 0;
+}
+
+.btn-opcao:hover {
+  background: #ffe98d;
+}
+
+.opcoes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.progresso {
+  background: #dcecf3;
+  border: 3px solid var(--escuro);
+  border-radius: 20px;
+  height: 27px;
+  overflow: hidden;
+  margin: 15px 0;
+}
+
+.barra {
+  background: var(--verde);
+  width: 0%;
+  height: 100%;
+  transition: width .4s;
+}
+
+.info {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.info span {
+  background: #e7f7ff;
+  border: 2px solid var(--escuro);
+  border-radius: 12px;
+  padding: 6px 13px;
+}
+
+.palavra {
+  font-size: clamp(38px, 8vw, 65px);
+  font-weight: 800;
+  color: #ed6545;
+  text-shadow: 2px 3px #ffd66a;
+  margin: 12px;
+}
+
+.feedback {
+  padding: 15px;
+  border-radius: 17px;
+  border: 3px solid var(--escuro);
+  font-size: 21px;
+  font-weight: 800;
+  margin-top: 18px;
+  display: none;
+}
+
+.certo {
+  background: #b8f5b8;
+}
+
+.errado {
+  background: #ffe0a5;
+}
+
+.estrelas {
+  font-size: clamp(45px, 10vw, 75px);
+  margin: 15px;
+}
+
+.hidden {
+  display: none;
+}
+
+footer {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 20px;
+}
+
+@media(max-width: 550px) {
+  body {
+    padding: 8px;
+  }
+
+  .painel {
+    padding: 13px;
+  }
+
+  .opcoes {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .btn-opcao {
+    min-height: 68px;
+    padding: 9px;
+  }
+
+  p {
+    font-size: 19px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+  <div class="paisagem">☀️ 🐎 🌾 🐦</div>
+  <h1>MISSÃO DAS SÍLABAS!</h1>
+  <p>Uma aventura pelo Pampa gaúcho!</p>
+</header>
+
+<!-- TELA INICIAL -->
+
+<section class="painel" id="inicio">
+  <h2>🌟 Olá, turma do 3º ano!</h2>
+
+  <div class="paisagem">🐴 🌳 🏡 🌻</div>
+
+  <p>
+    Hoje vamos passear por Alegrete e aprender
+    a separar as sílabas das palavras!
+  </p>
+
+  <div class="instrucao">
+    🎯 COMO JOGAR?<br>
+    Leia a palavra com a turma.<br>
+    Pense em quantas partes ela tem.<br>
+    Escolha a separação correta!
+  </div>
+
+  <p>São 3 fases. Vamos conquistar estrelas?</p>
+
+  <button class="btn-principal" onclick="iniciar()">
+    🚀 COMEÇAR!
+  </button>
+</section>
+
+<!-- TELA DO JOGO -->
+
+<section class="painel hidden" id="jogo">
+
+  <div class="info">
+    <span id="fase">Fase 1</span>
+    <span id="questao">Questão 1</span>
+    <span id="pontos">⭐ 0</span>
+  </div>
+
+  <div class="progresso">
+    <div class="barra" id="barra"></div>
+  </div>
+
+  <h2 id="tituloFase">Detetives das Sílabas</h2>
+
+  <div class="instrucao" id="instrucao">
+    Escolha a separação correta!
+  </div>
+
+  <p>Como separamos esta palavra?</p>
+
+  <div class="palavra" id="palavra">BOLA</div>
+
+  <div class="opcoes" id="opcoes"></div>
+
+  <div class="feedback" id="feedback"></div>
+
+  <button class="btn-principal hidden" id="proximo"
+    onclick="proxima()">
+    PRÓXIMA ➜
+  </button>
+
+</section>
+
+<!-- TELA FINAL -->
+
+<section class="painel hidden" id="final">
+
+  <h2>🏆 MISSÃO CONCLUÍDA!</h2>
+
+  <div class="estrelas" id="estrelas">⭐⭐⭐</div>
+
+  <p id="mensagemFinal"></p>
+
+  <div class="instrucao">
+    🌟 Parabéns, turma!<br>
+    Vocês são verdadeiros mestres das sílabas!
+  </div>
+
+  <p id="resultado"></p>
+
+  <button class="btn-principal" onclick="reiniciar()">
+    🔄 JOGAR NOVAMENTE
+  </button>
+
+</section>
+
+<footer>
+  🌾 GamificaPampa | Aprender brincando em Alegrete!
+</footer>
+
+</div>
+
+<script>
+
+// BANCO DE QUESTÕES
+
+const fases = [
+
+{
+  nome: "Detetives das Sílabas 🔎",
+  instrucao: "Fase 1: palavras curtinhas! Descubra como separar.",
+  perguntas: [
+
+    {
+      palavra: "BOLA",
+      opcoes: ["BO-LA", "B-OLA", "BOL-A", "BO-L"],
+      correta: "BO-LA",
+      explicacao: "Muito cuidado! BOLA tem duas sílabas: BO e LA."
+    },
+
+    {
+      palavra: "PIPA",
+      opcoes: ["P-IP-A", "PI-PA", "PIPA", "P-I-PA"],
+      correta: "PI-PA",
+      explicacao: "PIPA tem duas sílabas: PI e PA."
+    },
+
+    {
+      palavra: "CAVALO",
+      opcoes: ["CA-VA-LO", "CAV-A-LO", "CA-VAL-O", "C-A-VA-LO"],
+      correta: "CA-VA-LO",
+      explicacao: "CAVALO tem três sílabas: CA, VA e LO."
+    },
+
+    {
+      palavra: "MATE",
+      opcoes: ["M-A-TE", "MA-TE", "MAT-E", "MATE"],
+      correta: "MA-TE",
+      explicacao: "MATE tem duas sílabas: MA e TE."
+    }
+  ]
+},
+
+{
+  nome: "Exploradores do Pampa 🐎",
+  instrucao: "Fase 2: atenção aos encontros de letras!",
+  perguntas: [
+
+    {
+      palavra: "CHAPÉU",
+      opcoes: ["CHA-PÉU", "CH-A-PÉ-U", "CHA-PÉ-U", "C-HA-PÉU"],
+      correta: "CHA-PÉU",
+      explicacao: "CH é um dígrafo: as duas letras ficam juntas. O ditongo ÉU também fica na mesma sílaba."
+    },
+
+    {
+      palavra: "PRATO",
+      opcoes: ["P-RA-TO", "PRA-TO", "PR-A-TO", "PRAT-O"],
+      correta: "PRA-TO",
+      explicacao: "O encontro PR pode ficar junto no início da sílaba: PRA-TO."
+    },
+
+    {
+      palavra: "GALINHA",
+      opcoes: ["GA-LI-NHA", "GAL-I-NHA", "GA-LIN-HA", "G-A-LI-NHA"],
+      correta: "GA-LI-NHA",
+      explicacao: "NH é um dígrafo. As duas letras ficam juntas na mesma sílaba."
+    },
+
+    {
+      palavra: "PASTA",
+      opcoes: ["PAS-TA", "PA-ST-A", "P-AS-TA", "PASTA"],
+      correta: "PAS-TA",
+      explicacao: "Em PASTA, o S fica na primeira sílaba: PAS. O T começa a segunda."
+    }
+  ]
+},
+
+{
+  nome: "Mestres da Separação 🌟",
+  instrucao: "Fase 3: agora o desafio ficou maior!",
+  perguntas: [
+
+    {
+      palavra: "CARRO",
+      opcoes: ["CA-RRO", "CAR-RO", "C-AR-RO", "CARRO"],
+      correta: "CAR-RO",
+      explicacao: "O RR é separado na divisão silábica: CAR-RO."
+    },
+
+    {
+      palavra: "ASSUNTO",
+      opcoes: ["A-SSUN-TO", "AS-SUN-TO", "ASS-UN-TO", "A-S-SUN-TO"],
+      correta: "AS-SUN-TO",
+      explicacao: "O SS é separado: AS-SUN-TO."
+    },
+
+    {
+      palavra: "SAÚDE",
+      opcoes: ["SAÚ-DE", "SA-Ú-DE", "S-AÚ-DE", "SA-UD-E"],
+      correta: "SA-Ú-DE",
+      explicacao: "SAÚDE tem um hiato: A e Ú ficam em sílabas diferentes."
+    },
+
+    {
+      palavra: "PASSEIO",
+      opcoes: ["PAS-SEI-O", "PA-SSEI-O", "PAS-SE-IO", "PASS-EI-O"],
+      correta: "PAS-SEI-O",
+      explicacao: "O SS se separa: PAS-SEI-O. O EI permanece junto na mesma sílaba."
+    }
+  ]
+}
+
+];
+
+let faseAtual = 0;
+let perguntaAtual = 0;
+let pontos = 0;
+let respondido = false;
+let totalPerguntas = 0;
+
+fases.forEach(f => totalPerguntas += f.perguntas.length);
+
+// SOM DE ACERTO
+
+function somAcerto() {
+  try {
+    const audio = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audio.createOscillator();
+    const ganho = audio.createGain();
+
+    osc.connect(ganho);
+    ganho.connect(audio.destination);
+
+    osc.frequency.setValueAtTime(600, audio.currentTime);
+    osc.frequency.setValueAtTime(850, audio.currentTime + 0.12);
+
+    ganho.gain.setValueAtTime(0.2, audio.currentTime);
+    ganho.gain.exponentialRampToValueAtTime(
+      0.001, audio.currentTime + 0.35
+    );
+
+    osc.start();
+    osc.stop(audio.currentTime + 0.35);
+  } catch(e) {
+    // O jogo continua mesmo se o som não estiver disponível.
+  }
+}
+
+// INICIAR
+
+function iniciar() {
+  faseAtual = 0;
+  perguntaAtual = 0;
+  pontos = 0;
+
+  document.getElementById("inicio").classList.add("hidden");
+  document.getElementById("final").classList.add("hidden");
+  document.getElementById("jogo").classList.remove("hidden");
+
+  mostrarPergunta();
+}
+
+// MOSTRAR PERGUNTA
+
+function mostrarPergunta() {
+
+  respondido = false;
+
+  const fase = fases[faseAtual];
+  const pergunta = fase.perguntas[perguntaAtual];
+
+  document.getElementById("fase").textContent =
+    "Fase " + (faseAtual + 1);
+
+  document.getElementById("questao").textContent =
+    "Questão " + (perguntaAtual + 1) + "/4";
+
+  document.getElementById("pontos").textContent =
+    "⭐ " + pontos;
+
+  document.getElementById("tituloFase").textContent =
+    fase.nome;
+
+  document.getElementById("instrucao").textContent =
+    fase.instrucao;
+
+  document.getElementById("palavra").textContent =
+    pergunta.palavra;
+
+  document.getElementById("feedback").style.display = "none";
+
+  document.getElementById("proximo").classList.add("hidden");
+
+  document.getElementById("barra").style.width =
+    ((faseAtual * 4 + perguntaAtual) / totalPerguntas * 100) + "%";
+
+  const area = document.getElementById("opcoes");
+  area.innerHTML = "";
+
+  // EMBARALHAR ALTERNATIVAS
+
+  const alternativas = [...pergunta.opcoes].sort(
+    () => Math.random() - 0.5
+  );
+
+  alternativas.forEach(opcao => {
+
+    const botao = document.createElement("button");
+
+    botao.className = "btn-opcao";
+    botao.textContent = opcao;
+
+    botao.onclick = () => verificar(opcao, botao);
+
+    area.appendChild(botao);
+  });
+}
+
+// VERIFICAR RESPOSTA
+
+function verificar(resposta, botao) {
+
+  if (respondido) return;
+
+  respondido = true;
+
+  const pergunta = fases[faseAtual].perguntas[perguntaAtual];
+
+  const feedback = document.getElementById("feedback");
+  const botoes = document.querySelectorAll(".btn-opcao");
+
+  botoes.forEach(b => b.disabled = true);
+
+  if (resposta === pergunta.correta) {
+
+    pontos++;
+
+    botao.style.background = "#78e58b";
+
+    feedback.className = "feedback certo";
+    feedback.innerHTML =
+      "🎉 MUITO BEM! Resposta correta!<br>" +
+      "Você ganhou uma estrela! ⭐";
+
+    somAcerto();
+
+  } else {
+
+    botao.style.background = "#ff9a9a";
+
+    feedback.className = "feedback errado";
+    feedback.innerHTML =
+      "💡 VAMOS APRENDER!<br>" +
+      "A resposta correta é: <strong>" +
+      pergunta.correta + "</strong><br><br>" +
+      pergunta.explicacao;
+  }
+
+  feedback.style.display = "block";
+
+  document.getElementById("pontos").textContent =
+    "⭐ " + pontos;
+
+  const progresso = (faseAtual * 4 + perguntaAtual + 1)
+    / totalPerguntas * 100;
+
+  document.getElementById("barra").style.width =
+    progresso + "%";
+
+  document.getElementById("proximo").classList.remove("hidden");
+}
+
+// PRÓXIMA PERGUNTA
+
+function proxima() {
+
+  perguntaAtual++;
+
+  if (perguntaAtual >= fases[faseAtual].perguntas.length) {
+
+    perguntaAtual = 0;
+    faseAtual++;
+
+    if (faseAtual >= fases.length) {
+      mostrarFinal();
+      return;
+    }
+  }
+
+  mostrarPergunta();
+}
+
+// RESULTADO FINAL
+
+function mostrarFinal() {
+
+  document.getElementById("jogo").classList.add("hidden");
+  document.getElementById("final").classList.remove("hidden");
+
+  let estrelas = 0;
+
+  if (pontos >= 10) estrelas = 3;
+  else if (pontos >= 7) estrelas = 2;
+  else if (pontos >= 4) estrelas = 1;
+
+  let mensagem = "";
+
+  if (estrelas === 3) {
+    mensagem = "INCRÍVEL! Vocês são campeões da separação silábica!";
+  } else if (estrelas === 2) {
+    mensagem = "MUITO BEM! Vocês aprenderam muitas coisas!";
+  } else if (estrelas === 1) {
+    mensagem = "BOA MISSÃO! Continuem praticando!";
+  } else {
+    mensagem = "Toda aventura ensina algo! Vamos tentar novamente!";
+  }
+
+  document.getElementById("estrelas").textContent =
+    "⭐".repeat(estrelas) + "☆".repeat(3 - estrelas);
+
+  document.getElementById("mensagemFinal").textContent = mensagem;
+
+  document.getElementById("resultado").innerHTML =
+    "Vocês acertaram <strong>" + pontos +
+    " de " + totalPerguntas + " perguntas!</strong>";
+}
+
+// REINICIAR
+
+function reiniciar() {
+
+  document.getElementById("final").classList.add("hidden");
+  document.getElementById("inicio").classList.remove("hidden");
+
+}
+
+</script>
+
+</body>
+</html>
